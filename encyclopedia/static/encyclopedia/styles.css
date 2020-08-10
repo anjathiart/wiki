@@ -13,12 +13,12 @@ h1 {
     padding-top: 20px;
 }
 
-#userEntryContainer {
+.userEntryContainer {
     display: flex;
     flex-direction: column;
 }
 
-#userEntryContainer input[type=text] {
+.userEntryContainer input[type=text] {
     width: 80%;
     margin-bottom: 0.5rem;
 }

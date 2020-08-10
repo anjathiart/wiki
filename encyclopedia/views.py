@@ -5,13 +5,14 @@ from django import forms
 
 from . import util
 
-# class NewEntryForm(forms.Form):
-# 	content = forms.CharField(widget=forms.Textarea)
-# 	title = forms.CharField(label="New Task")
-# 	# priority = forms.IntegerField(label="Priority", min_value=1, max_value=5)
+class EntryEditForm(forms.Form):
+	content = forms.CharField(widget=forms.Textarea)
+	# title = forms.CharField(label="New Task")
+	# priority = forms.IntegerField(label="Priority", min_value=1, max_value=5)
 
 
 def index(request):
+	print(util.list_entries())
 	return render(request, "encyclopedia/index.html", {
 		"entries": util.list_entries()
 	})
@@ -49,6 +50,7 @@ def new(request):
 	return render(request, "encyclopedia/create_new.html")
 
 def save(request):
+	print(request)
 	if request.method == "POST":
 		title = request.POST.get("title")
 		content = request.POST.get('content')
@@ -59,36 +61,30 @@ def save(request):
 					"msg": f"This title, {title}, already exists!"
 				}
 			})
-		else:
-			util.save_entry(title, content)
-			return redirect('entry', title = title)
+		if title == '':
+			return render(request, "encyclopedia/error.html", {
+				"error": {
+					"code": 400,
+					"msg": f"Please add an entry title!"
+				}
+			})
+		util.save_entry(title, content)
+		return redirect('entry', title = title)
+
+def edit(request, title):
+	# TODO --> some error handling
+	if request.method == "GET":
+		return render(request, "encyclopedia/edit.html", {
+				"title": title,
+	            "content": util.get_entry(title)
+	        })
+	if request.method == "POST":
+		title = request.POST.get("title")
+		content = request.POST.get("content")
+		util.save_entry(title, content)
+		return redirect('entry', title = title)
 
 
-		# form = newEntryForm(request.POST)
-		# if form.is_valid():
-		# 	title = form.cleaned_data["title"]
-		# 	text = form.cleaned_data["text"]
-
-
-	# if request.method == "POST":
- #        form = NewTaskForm(request.POST)
- #        if form.is_valid():
- #            task = form.cleaned_data["task"]
- #            request.session["tasks"] += [task]
- #            return HttpResponseRedirect(reverse("tasks:index"))
- #        else:
- #            return render(request, "tasks/add.html", {
- #                "form": form
- #            })
- #    else:
- #        return render(request, "tasks/add.html", {
- #            "form": NewTaskForm()
- #        })
-	# check that this title does not exist in session storage
-
-	# if title exists, don't save, stay on page, show validation message
-
-	# save to localstorage
 
 	
 	
