@@ -6,11 +6,15 @@
 
 {% block body %}
 	<h1>Entries matching: <i>{{ search_string }}</i></h1>
-	{% for result in results %}
-	<!-- <a href="{% url 'entry' title=result %}">{{ result }}</a> -->
-	{% empty %}
-	<p>No matches</p>
-	{% endfor %}
+	
+	<ul>
+		{% for result in results %}
+		<li><a href="{% url 'entry' title=result %}">{{ result }}</a></li>
+		{% empty %}
+		<p>No matches</p>
+		{% endfor %}
+	</ul>
+	
 
 
 {% endblock %}

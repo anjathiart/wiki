@@ -3,6 +3,10 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django import forms
 
+# TODO -> requirements file
+import random
+from markdown2 import Markdown
+
 from . import util
 
 class EntryEditForm(forms.Form):
@@ -12,7 +16,6 @@ class EntryEditForm(forms.Form):
 
 
 def index(request):
-	print(util.list_entries())
 	return render(request, "encyclopedia/index.html", {
 		"entries": util.list_entries()
 	})
@@ -20,7 +23,12 @@ def index(request):
 
 def entry(request, title):
 	entry = util.get_entry(title)
+	print('entry')
+	print(entry)
 	if (entry != None):
+		util.parse_markdown(entry)
+		markdowner = Markdown()
+		entry = markdowner.convert(entry)
 		return render(request, "encyclopedia/entry.html", { "entry": entry })
 	else:
 		return render(request, "encyclopedia/error.html", {
@@ -45,12 +53,18 @@ def search(request):
 				"results": list_entries_matched,
 				"search_string": search_string
 			})
+	else:
+		return render(request, "encyclopedia/error.html", {
+			"error": {
+				"code": 405,
+				"msg": f"Method not allowed."
+			}
+		})
 
 def new(request):
 	return render(request, "encyclopedia/create_new.html")
 
 def save(request):
-	print(request)
 	if request.method == "POST":
 		title = request.POST.get("title")
 		content = request.POST.get('content')
@@ -84,7 +98,16 @@ def edit(request, title):
 		util.save_entry(title, content)
 		return redirect('entry', title = title)
 
-
-
+# TODO: remember to add the random lib to the requirements file thingy
+def lucky(request):
+	if (len(util.list_entries()) > 0):
+		return redirect('entry', title = random.choice(util.list_entries()))
+	else:
+		return render(request, "encyclopedia/error.html", {
+			"error": {
+				"code": 404,
+				"msg": f"The encyclopedia is empty! Add some entries."
+			}
+		})
 	
 	

@@ -7,25 +7,40 @@ code {
     white-space: pre;
 }
 
+ul {
+    margin-top: 20px;
+}
 h1 {
-    color: pink;
     margin-top: 0px;
     padding-top: 20px;
 }
 
+a {
+    color: black;
+}
+
+a:active {
+  color: blue;
+}
+
+a:hover {
+    text-decoration: none;
+    color: blue;
+}
 .userEntryContainer {
     display: flex;
     flex-direction: column;
+    width: 80%;
 }
 
 .userEntryContainer input[type=text] {
-    width: 80%;
+    width: 100%;
     margin-bottom: 0.5rem;
 }
 
 textarea {
-    height: 90vh;
-    width: 80%;
+    height: 80vh;
+    width: 100%;
 }
 
 .main {
@@ -44,7 +59,38 @@ textarea {
     padding: 20px;
 }
 
+.sidebar > form {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.sidebar > div {
+    margin-left: 10px;
+}
+
 .sidebar h2 {
     margin-top: 5px;
 }
+
+.button, input[type=submit] {
+    width: 100px;
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 1rem 0px;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    text-align: center;
+    border: none;
+    transition: all 0.25s;
+    opacity: 1;
+    border: 1px solid darkgrey;
+}
+
+.button:hover {
+    opacity: 0.6;
+    color: blue;
+    border: 1px solid blue;
+    font-weight: 700;
+}
+
 
