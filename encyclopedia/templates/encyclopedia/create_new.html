@@ -5,11 +5,10 @@
 {% endblock %}
 
 {% block body %}
-	<form class="userEntryContainer" action="{% url 'save' %}" method="post">
+	<form class="userEntryContainer" action="{% url 'new' %}" method="post">
 		 {% csrf_token %}
-	    <input type=text name="title" placeholder="Your entry's title...">
-	    <textarea name="content"></textarea>
-	    <p style="text-align: right"><input type=submit value="Save" class="button"></p>
+	    <input type=text name="title" placeholder="Your entry's title..." class="mt2">
+	    <textarea name="content" class=""></textarea>
+	    <p style="text-align: right" class="mt3"><input type=submit value="Save" class="button"></p>
 	</form>
-
 {% endblock %}

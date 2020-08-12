@@ -5,13 +5,14 @@
 {% endblock %}
 
 {% block body %}
-	<h3>Editing: <i>{{ title }}</i></h3>
+	<h4 class="mt2">Editing: <i>{{ title }}</i></h4>
 	<form action="" method="post" class="userEntryContainer">
 		{% csrf_token %}
 		{{ form }}
-		<textarea name="content">{{ content }}</textarea>
+		<textarea name="content" class="mt2">{{ content }}</textarea>
 		<input type="text" name="title" value="{{ title }}" hidden>
-		<input type="submit">
+		<p style="text-align: right" class="mt3">
+			<input type=submit value="Save" class="button">
+		</p>
 	</form>
-
 {% endblock %}

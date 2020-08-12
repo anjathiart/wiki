@@ -9,11 +9,6 @@ from markdown2 import Markdown
 
 from . import util
 
-class EntryEditForm(forms.Form):
-	content = forms.CharField(widget=forms.Textarea)
-	# title = forms.CharField(label="New Task")
-	# priority = forms.IntegerField(label="Priority", min_value=1, max_value=5)
-
 
 def index(request):
 	return render(request, "encyclopedia/index.html", {
@@ -22,11 +17,12 @@ def index(request):
 
 
 def entry(request, title):
+	"""
+    If the entry title exists, it is converted to html and served,
+    Else a 404 error page is served
+    """
 	entry = util.get_entry(title)
-	print('entry')
-	print(entry)
 	if (entry != None):
-		util.parse_markdown(entry)
 		markdowner = Markdown()
 		entry = markdowner.convert(entry)
 		return render(request, "encyclopedia/entry.html", { "entry": entry })
@@ -39,7 +35,10 @@ def entry(request, title):
 		})
 
 def search(request):
-	if (request.GET.get('q', '') != ''):
+	"""
+    TODO
+    """
+	if request.GET.get('q', '') != '':
 		search_string = request.GET.get('q','')
 		if (util.get_entry(search_string) != None):
 			return redirect('entry', title = search_string)
@@ -61,10 +60,13 @@ def search(request):
 			}
 		})
 
-def new(request):
-	return render(request, "encyclopedia/create_new.html")
 
-def save(request):
+def new(request):
+	"""
+    POST method to save new entry if the title does not already exist and 
+    if it is not left blank. Otherwise, render appropriate error page.
+    GET renders a blank form to create a new entry
+    """
 	if request.method == "POST":
 		title = request.POST.get("title")
 		content = request.POST.get('content')
@@ -82,24 +84,34 @@ def save(request):
 					"msg": f"Please add an entry title!"
 				}
 			})
-		util.save_entry(title, content)
-		return redirect('entry', title = title)
+		util.save_entry(title.capitalize(), content)
+		return redirect('entry', title = title.capitalize())
+	else:
+		return render(request, "encyclopedia/create_new.html")
+
 
 def edit(request, title):
-	# TODO --> some error handling
-	if request.method == "GET":
-		return render(request, "encyclopedia/edit.html", {
-				"title": title,
-	            "content": util.get_entry(title)
-	        })
+	"""
+	POST method to save edited entry
+	GET renders a prepoluted form with entry content
+	"""
 	if request.method == "POST":
 		title = request.POST.get("title")
 		content = request.POST.get("content")
 		util.save_entry(title, content)
 		return redirect('entry', title = title)
+	else:
+		return render(request, "encyclopedia/edit.html", {
+				"title": title,
+	            "content": util.get_entry(title)
+	        })
+	
 
-# TODO: remember to add the random lib to the requirements file thingy
 def lucky(request):
+	"""
+    Serve a random wiki entry page.
+    If there are no entries, render a 404 error page
+    """
 	if (len(util.list_entries()) > 0):
 		return redirect('entry', title = random.choice(util.list_entries()))
 	else:
@@ -109,5 +121,4 @@ def lucky(request):
 				"msg": f"The encyclopedia is empty! Add some entries."
 			}
 		})
-	
 	

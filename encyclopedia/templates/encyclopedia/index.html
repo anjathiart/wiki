@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body %}
-    <h1>All Pages</h1>
-
-    <ul>
+    <h1>Pages</h1>
+    <hr>
+    <ul class="resultsList">
         {% for entry in entries %}
             <li><a href="{% url 'entry' title=entry %}">{{ entry }}</a></li>
         {% endfor %}
