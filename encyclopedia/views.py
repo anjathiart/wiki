@@ -38,7 +38,6 @@ def search(request):
     Either directs user to the entry searched for, or displays a list of
     all titles containing the search string
     """
-	# print(request.GET.get('q'))
 	if request.GET.get('q', '') != '' or request.GET.get('q', '') != '&':
 		search_string = request.GET.get('q','')
 		if (util.get_entry(search_string) != None):
@@ -55,8 +54,6 @@ def search(request):
 				"msg": "Method not allowed!"
 			}
 		})
-
-
 
 
 def new(request):
