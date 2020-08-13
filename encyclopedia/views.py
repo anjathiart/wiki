@@ -3,12 +3,10 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django import forms
 
-# TODO -> requirements file
 import random
 from markdown2 import Markdown
 
 from . import util
-
 
 def index(request):
 	return render(request, "encyclopedia/index.html", {
@@ -34,31 +32,31 @@ def entry(request, title):
 			}
 		})
 
+  
 def search(request):
 	"""
-    TODO
+    Either directs user to the entry searched for, or displays a list of
+    all titles containing the search string
     """
-	if request.GET.get('q', '') != '':
+	# print(request.GET.get('q'))
+	if request.GET.get('q', '') != '' or request.GET.get('q', '') != '&':
 		search_string = request.GET.get('q','')
 		if (util.get_entry(search_string) != None):
 			return redirect('entry', title = search_string)
 		else:
-			# TODO -> try use a lamda search / filter function instead
-			list_entries_matched = []
-			for entry_title in util.list_entries():
-				if (search_string in entry_title):
-					list_entries_matched.append(entry_title)
 			return render(request, "encyclopedia/search.html", {
-				"results": list_entries_matched,
+				"results": filter(lambda x: (search_string in x), util.list_entries()),
 				"search_string": search_string
 			})
 	else:
 		return render(request, "encyclopedia/error.html", {
 			"error": {
 				"code": 405,
-				"msg": f"Method not allowed."
+				"msg": "Method not allowed!"
 			}
 		})
+
+
 
 
 def new(request):
@@ -84,8 +82,8 @@ def new(request):
 					"msg": f"Please add an entry title!"
 				}
 			})
-		util.save_entry(title.capitalize(), content)
-		return redirect('entry', title = title.capitalize())
+		util.save_entry(title, content)
+		return redirect('entry', title = title)
 	else:
 		return render(request, "encyclopedia/create_new.html")
 
